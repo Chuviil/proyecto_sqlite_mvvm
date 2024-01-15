@@ -14,6 +14,9 @@ const ListaProductosView = ({viewModel}: { viewModel: ListaProductosViewModelTyp
         <SafeAreaView style={styles.flex}>
             <View>
                 <Text>Lista Productos</Text>
+                <TouchableOpacity onPress={viewModel.handleAgregarButton}>
+                    <Text>Agregar Producto</Text>
+                </TouchableOpacity>
                 <FlatList
                     data={viewModel.productos}
                     renderItem={({item}) => (
