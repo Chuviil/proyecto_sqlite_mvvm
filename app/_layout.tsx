@@ -1,6 +1,7 @@
 import {DarkTheme, DefaultTheme, ThemeProvider} from '@react-navigation/native';
 import {Slot} from 'expo-router';
 import {useColorScheme} from 'react-native';
+import {PaperProvider} from "react-native-paper";
 
 export {
     // Catch any errors thrown by the Layout component.
@@ -20,8 +21,10 @@ function RootLayoutNav() {
     const colorScheme = useColorScheme();
 
     return (
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-            <Slot/>
-        </ThemeProvider>
+        <PaperProvider>
+            <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+                <Slot/>
+            </ThemeProvider>
+        </PaperProvider>
     );
 }
