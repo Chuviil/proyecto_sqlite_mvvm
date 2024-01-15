@@ -8,17 +8,23 @@ function openDatabase() {
 
 class ProductoRepository {
     private _db: SQLite.SQLiteDatabase;
+    private readonly _tableCreationPromise: Promise<void>;
 
     constructor() {
         this._db = openDatabase();
-        this._db.transaction((tx: SQLite.SQLTransaction) => {
-            tx.executeSql(
-                "CREATE TABLE IF NOT EXIST Productos (idProducto INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, nombre TEXT, descripcion TEXT, cantidad INTEGER)"
-            );
+        this._tableCreationPromise = new Promise<void>((resolve) => {
+            this._db.transaction((tx: SQLite.SQLTransaction) => {
+                tx.executeSql(
+                    "CREATE TABLE IF NOT EXISTS Productos (idProducto INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, nombre TEXT, descripcion TEXT, cantidad INTEGER)",
+                    [],
+                    () => resolve(),
+                );
+            });
         });
     }
 
     public async agregarProducto(producto: Producto): Promise<void> {
+        await this._tableCreationPromise;
         await this._db.transactionAsync
         (
             async (tx: SQLite.SQLTransactionAsync) => {
@@ -32,6 +38,7 @@ class ProductoRepository {
     }
 
     public async obtenerProducto(idProducto: number): Promise<Producto> {
+        await this._tableCreationPromise;
         let producto: Producto = {idProducto: 0, nombre: "", descripcion: "", cantidad: 0};
 
         await this._db.transactionAsync
@@ -53,6 +60,7 @@ class ProductoRepository {
     }
 
     public async obtenerProductos(): Promise<Producto[]> {
+        await this._tableCreationPromise;
         let productos: Producto[] = [];
 
         await this._db.transactionAsync
@@ -72,6 +80,7 @@ class ProductoRepository {
     }
 
     public async actualizarProducto(idProducto: number, producto: Producto): Promise<void> {
+        await this._tableCreationPromise;
         await this._db.transactionAsync
         (
             async (tx: SQLite.SQLTransactionAsync) => {
@@ -85,6 +94,7 @@ class ProductoRepository {
     }
 
     public async eliminarProducto(idProducto: number): Promise<void> {
+        await this._tableCreationPromise;
         await this._db.transactionAsync
         (
             async (tx: SQLite.SQLTransactionAsync) => {
