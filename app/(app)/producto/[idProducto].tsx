@@ -49,6 +49,10 @@ const DetallesProductoViewModel = () => {
     }
 
     const handleGuardarPress = () => {
+        ProductoRepository.actualizarProducto(producto.idProducto, producto)
+            .then(() => {
+                alert("Producto actualizado correctamente");
+            });
         setCanEdit(false);
     }
 
