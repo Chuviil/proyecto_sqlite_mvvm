@@ -9,7 +9,7 @@ const CrearProductoViewModel = () => {
         idProducto: 0,
         nombre: '',
         descripcion: '',
-        cantidad: 0,
+        cantidad: -1,
     });
 
     const handleNombreChange = (nombre: string) => {
@@ -25,6 +25,11 @@ const CrearProductoViewModel = () => {
     };
 
     const handleGuardarProducto = async () => {
+        if (producto.nombre.length === 0 || producto.descripcion.length === 0 || producto.cantidad < 0) {
+            alert('Debe llenar todos los campos');
+            return;
+        }
+
         await ProductoRepository.agregarProducto(producto);
         router.back();
     };
